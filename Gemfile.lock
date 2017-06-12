@@ -111,6 +111,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  rails (>= 5.1.0)
   remember_params!
   timecop (~> 0.8)
 
