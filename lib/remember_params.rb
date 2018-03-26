@@ -32,8 +32,13 @@ module RememberParams
     return unless respond_to? :remember_params_config
     return unless config = self.remember_params_config[action_name]
 
-    params_to_remember = params.to_unsafe_h.slice(*config[:params])
-    key = params.slice(:controller, :action).values.join('/').parameterize
+    params_to_remember = params
+      .permit!
+      .slice(*config[:params])
+      .to_h
+      .delete_if { |k,v| v.to_s.length > 50 }
+
+    key = params.permit(:controller, :action).values.join('/').parameterize
     session[:remembered_params]      ||= {}
     session[:remembered_params][key] ||= {}
 

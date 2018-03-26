@@ -20,6 +20,12 @@ class BooksControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to books_index_path(foo: 3, bar: 2)
   end
 
+  test 'restores remembered params, keeps not remembered params' do
+    get books_index_path, params: { foo: 1 }
+    get books_index_path, params: { baz: 2 }
+    assert_redirected_to books_index_path(foo: 1, baz: 2)
+  end
+
   test 'resets all params' do
     get books_index_path, params: { foo: 1, bar: 2 }
     get books_index_path, params: { reset_params: true }
@@ -75,5 +81,14 @@ class BooksControllerTest < ActionDispatch::IntegrationTest
     Timecop.travel(DateTime.now+40.minutes)
     get books_index_path
     assert_redirected_to books_index_path(foo: 1, bar: 2)
+  end
+
+  test 'drops very long params' do
+    get books_index_path, params: { foo: 'A' * 5000, bar: 2 }
+    get books_index_path
+    assert_redirected_to books_index_path(bar: 2)
+    get books_index_path, params: { foo: ['A'] * 5000, bar: 2 }
+    get books_index_path
+    assert_redirected_to books_index_path(bar: 2)
   end
 end
