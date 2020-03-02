@@ -19,4 +19,5 @@ Gem::Specification.new do |s|
   s.add_dependency "rails", ">= 5.0.7.2"
   s.add_development_dependency "timecop", "~> 0.8"
   s.add_development_dependency "pry"
+  s.add_development_dependency "rake", ">= 12.3.3"
 end
